@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZodiaKu — Kenali Dirimu, Curhat Sepuasnya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ===== CURSOR BLOB ===== -->
+<div class="cursor-blob" id="cursorBlob"></div>
+
+<!-- ===== PARTICLE CANVAS ===== -->
+<canvas id="starCanvas"></canvas>
+
+<!-- ===== NAV ===== -->
+<nav class="navbar">
+  <div class="nav-logo">✦ ZodiaKu</div>
+  <div class="nav-links">
+    <a href="#home" class="nav-link active">Home</a>
+    <a href="#zodiak-section" class="nav-link">Zodiak</a>
+    <a href="#chat-section" class="nav-link">Curhat AI</a>
+    <a href="#wall-section" class="nav-link">Wall</a>
+  </div>
+  <div class="nav-toggle" id="navToggle">☰</div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-badge">✨ Powered by Bintang & AI</div>
+    <h1 class="hero-title">
+      Siapa <span class="gradient-text">Kamu</span><br/>
+      Sebenarnya?
+    </h1>
+    <p class="hero-sub">Masukkan nama & bulan lahirmu. Temukan zodiakmu, baca motivasi khusus untukmu, dan curhat bebas bareng AI yang ngerti kamu.</p>
+    <div class="hero-btns">
+      <a href="#zodiak-section" class="btn-primary">Mulai Sekarang →</a>
+      <a href="#chat-section" class="btn-ghost">Curhat AI</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num" id="visitorCount">1,247</span><span class="stat-label">Pengguna</span></div>
+      <div class="stat-div">|</div>
+      <div class="stat"><span class="stat-num">12</span><span class="stat-label">Zodiak</span></div>
+      <div class="stat-div">|</div>
+      <div class="stat"><span class="stat-num">∞</span><span class="stat-label">Cerita</span></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="orbit-ring ring-1"></div>
+    <div class="orbit-ring ring-2"></div>
+    <div class="orbit-ring ring-3"></div>
+    <div class="planet-center">
+      <span class="planet-emoji" id="heroEmoji">🌟</span>
+    </div>
+    <div class="orbit-dot dot-1">♈</div>
+    <div class="orbit-dot dot-2">♉</div>
+    <div class="orbit-dot dot-3">♊</div>
+    <div class="orbit-dot dot-4">♋</div>
+  </div>
+</section>
+
+<!-- ===== ZODIAK FORM ===== -->
+<section class="zodiak-section" id="zodiak-section">
+  <div class="section-header">
+    <div class="section-tag">✦ STEP 1</div>
+    <h2>Kenali <span class="gradient-text">Zodiakmu</span></h2>
+    <p>Isi nama dan tanggal lahirmu untuk reveal zodiak & prediksi karaktermu</p>
+  </div>
+
+  <div class="form-card" id="formCard">
+    <div class="form-glow"></div>
+    <div class="form-inner">
+      <div class="form-group">
+        <label class="form-label">✍️ Nama Kamu</label>
+        <input type="text" id="namaInput" class="form-input" placeholder="Tulis nama kamu..." maxlength="30" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">📅 Tanggal & Bulan Lahir</label>
+        <div class="date-row">
+          <select id="tanggalInput" class="form-select">
+            <option value="">Tanggal</option>
+          </select>
+          <select id="bulanInput" class="form-select">
+            <option value="">Bulan</option>
+            <option value="1">Januari</option>
+            <option value="2">Februari</option>
+            <option value="3">Maret</option>
+            <option value="4">April</option>
+            <option value="5">Mei</option>
+            <option value="6">Juni</option>
+            <option value="7">Juli</option>
+            <option value="8">Agustus</option>
+            <option value="9">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-reveal" id="revealBtn" onclick="revealZodiak()">
+        <span class="btn-text">✨ Reveal Zodiakku</span>
+        <span class="btn-loader" style="display:none">⟳</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- RESULT CARD -->
+  <div class="result-card" id="resultCard" style="display:none">
+    <div class="result-glow"></div>
+    <div class="result-header">
+      <div class="zodiak-emoji-big" id="zodiakEmoji">♈</div>
+      <div class="result-info">
+        <div class="result-name" id="resultName">—</div>
+        <div class="result-zodiak" id="resultZodiak">—</div>
+        <div class="result-tanggal" id="resultTanggal">—</div>
+      </div>
+      <div class="result-element" id="resultElement">—</div>
+    </div>
+
+    <div class="result-traits" id="resultTraits"></div>
+
+    <div class="result-tabs">
+      <button class="rtab active" onclick="switchTab('motivasi')">💫 Motivasi</button>
+      <button class="rtab" onclick="switchTab('karakter')">🧠 Karakter</button>
+      <button class="rtab" onclick="switchTab('ramalan')">🔮 Ramalan</button>
+      <button class="rtab" onclick="switchTab('hubungan')">💕 Hubungan</button>
+    </div>
+    <div class="result-tab-content" id="tabContent"></div>
+
+    <div class="result-actions">
+      <button class="btn-share" onclick="shareResult()">📤 Share</button>
+      <button class="btn-curhat" onclick="goToCurhat()">💬 Curhat AI</button>
+      <button class="btn-reset" onclick="resetForm()">↩ Ulang</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COMMENT WALL ===== -->
+<section class="wall-section" id="wall-section">
+  <div class="section-header">
+    <div class="section-tag">✦ WALL</div>
+    <h2>Apa Kata <span class="gradient-text">Mereka</span></h2>
+    <p>Tinggalkan kesan atau semangat buat pengguna lain!</p>
+  </div>
+  <div class="wall-container">
+    <div class="comment-form-box">
+      <textarea id="commentInput" class="comment-textarea" placeholder="Tulis sesuatu yang memotivasi...✨" maxlength="200"></textarea>
+      <div class="comment-form-footer">
+        <span class="comment-from" id="commentFrom">dari: —</span>
+        <button class="btn-comment" onclick="postComment()">Kirim 🕊️</button>
+      </div>
+    </div>
+    <div class="comments-grid" id="commentsGrid"></div>
+  </div>
+</section>
+
+<!-- ===== AI CHAT ===== -->
+<section class="chat-section" id="chat-section">
+  <div class="section-header">
+    <div class="section-tag">✦ AI CURHAT</div>
+    <h2>Ngobrol Sama <span class="gradient-text">Nova AI</span></h2>
+    <p>Nova ngerti zodiak kamu dan siap jadi teman curhat terbaikmu 24/7</p>
+  </div>
+
+  <div class="chat-wrapper">
+    <div class="chat-sidebar">
+      <div class="chat-profile" id="chatProfile">
+        <div class="chat-avatar" id="chatAvatar">🌟</div>
+        <div class="chat-user-info">
+          <div class="chat-username" id="chatUsername">Tamu</div>
+          <div class="chat-zodiak-tag" id="chatZodiakTag">Belum diisi</div>
+        </div>
+      </div>
+      <div class="chat-tips">
+        <div class="tips-title">💡 Bisa tanya:</div>
+        <div class="tip-chip" onclick="insertTip('Bagaimana karakter zodiakku?')">Karakter zodiak</div>
+        <div class="tip-chip" onclick="insertTip('Aku lagi galau, ada saran?')">Lagi galau</div>
+        <div class="tip-chip" onclick="insertTip('Cocok sama zodiak apa?')">Cocok sama siapa</div>
+        <div class="tip-chip" onclick="insertTip('Beri aku motivasi hari ini')">Minta motivasi</div>
+        <div class="tip-chip" onclick="insertTip('Aku merasa tidak berguna')">Curhat perasaan</div>
+        <div class="tip-chip" onclick="insertTip('Ramalan karierku gimana?')">Karier & masa depan</div>
+      </div>
+      <div class="chat-mood">
+        <div class="tips-title">😶 Mood kamu:</div>
+        <div class="mood-row">
+          <span class="mood-btn" onclick="setMood('😊')">😊</span>
+          <span class="mood-btn" onclick="setMood('😔')">😔</span>
+          <span class="mood-btn" onclick="setMood('😤')">😤</span>
+          <span class="mood-btn" onclick="setMood('😭')">😭</span>
+          <span class="mood-btn" onclick="setMood('🥰')">🥰</span>
+          <span class="mood-btn" onclick="setMood('😰')">😰</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-main">
+      <div class="chat-topbar">
+        <div class="nova-indicator">
+          <div class="nova-dot"></div>
+          <span>Nova AI · Online</span>
+        </div>
+        <button class="btn-clear-chat" onclick="clearChat()">🗑️ Hapus</button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-msg nova">
+          <div class="msg-avatar">🌙</div>
+          <div class="msg-bubble">
+            Haii! Aku <strong>Nova</strong> 🌟 — AI teman curhat kamu.<br/>
+            Sebelum ngobrol, isi dulu nama & zodiak kamu ya biar aku bisa lebih ngerti kamu~ <br/>
+            <em>Atau langsung aja cerita, aku siap dengerin! 💖</em>
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <div class="typing-indicator" id="typingIndicator" style="display:none">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="chat-inputbox">
+          <textarea class="chat-textarea" id="chatInput" placeholder="Cerita apa aja ke Nova..." rows="1" onkeydown="handleChatKey(event)"></textarea>
+          <button class="btn-send" onclick="sendMessage()">↑</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">✦ ZodiaKu</div>
+    <p class="footer-text">Dibuat dengan 💙 untuk kamu yang terus bertumbuh.<br/>Zodiak bukan takdir — tapi cermin diri.</p>
+    <div class="footer-socials">
+      <a href="#" class="fsocial">GitHub</a>
+      <a href="#" class="fsocial">Instagram</a>
+    </div>
+    <p class="footer-copy">© 2025 ZodiaKu · All rights reserved</p>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
